@@ -9,29 +9,75 @@
  <link href="css/bootstrap.css" rel="stylesheet">
  <link href="css/bootstrap-responsive.css" rel="stylesheet">
  <link href="css/main.less" rel="stylesheet/less">
+<style type="text/css">
+.piano{
+  /*display: inline-block;*/
+  -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+}
+.key{
+  display: inline-block;
+  background-color: #FFF;
+  border:2px solid #000000;
+  width: 40px;
+  height: 200px;
+  cursor: default;
+  text-align: center;
+  margin: 0px;
+  margin-bottom: 5px;
+}
 
+.black{
+  margin: 0px;
+  width: 20px;
+  height: 180px;
+  background-color: #000;
+  border:2px solid #FFF;
+  color: white;
+
+}
+
+.active{
+  background-color: #F00;
+  color:white;
+}
+</style>
 </head>
 <body>
-  <p class="play">Play</p>
-  <p class="stop">Stop</p>
-
   <div class="container-fluid default-container">
     <div class="row-fluid">
       <div id="played-note"></div>
       <hr>
-          <div class="span12">
+          <div class="span12 piano">
+            
             <% 
-            var notes = ['Ab','A','Bb','B','C','Db', 'D', 'Eb', 'E','F', 'Gb', 'G'];
-            var notekey = 1;
-            for(var j=1; j < 8; j++){
+            var notas = ['C','C#','D','D#','E','F', 'F#', 'G', 'G#','A', 'A#', 'B'];
 
-            for(i=0; i<notes.length; i++) { %>
-              
-                <div class='btn btn-large' data-key="<%= notekey %>" data-note="<%= notes[i] + j %>.mp3"><%= notes[i] + j %></div>
-              
-            <%  notekey++; } %>
-            <hr>
-            <%}%>        
+            var notes = ['C','Db','D','Eb','E','F', 'Gb', 'G', 'Ab','A', 'Bb', 'B'];
+
+            var notekey = 1;
+            for(var j=1; j < 8; j++){ %>
+              <div class='key' id="<%= notes[0] + j %>" data-note="<%= notes[0] + j %>.mp3" title="<%= notas[0] + j %>"><%= notas[0] %></div>
+              <div class='key black' id="<%= notes[1] + j%>" data-note="<%= notes[1] + j %>.mp3" title="<%= notas[1] + j %>"><%= notas[1]%></div>
+              <div class='key ' id="<%= notes[2] + j%>" data-note="<%= notes[2] + j %>.mp3" title="<%= notas[2] + j %>"><%= notas[2]%></div>
+              <div class='key black' id="<%= notes[3] + j%>" data-note="<%= notes[3] + j %>.mp3" title="<%= notas[3] + j %>"><%= notas[3]%></div>
+              <div class='key ' id="<%= notes[4] + j%>" data-note="<%= notes[4] + j %>.mp3" title="<%= notas[4] + j %>"><%= notas[4]%></div>
+              <div class='key ' id="<%= notes[5] + j%>" data-note="<%= notes[5] + j %>.mp3" title="<%= notas[5] + j %>"><%= notas[5]%></div>
+              <div class='key black' id="<%= notes[6] + j%>" data-note="<%= notes[6] + j %>.mp3" title="<%= notas[6] + j %>"><%= notas[6]%></div>
+              <div class='key ' id="<%= notes[7] + j%>" data-note="<%= notes[7] + j %>.mp3" title="<%= notas[7] + j %>"><%= notas[7]%></div>
+              <div class='key black' id="<%= notes[8] + j%>" data-note="<%= notes[8] + j %>.mp3" title="<%= notas[8] + j %>"><%= notas[8]%></div>
+              <div class='key ' id="<%= notes[9] + j%>" data-note="<%= notes[9] + j %>.mp3" title="<%= notas[9] + j %>"><%= notas[9] + j %></div>
+              <div class='key black' id="<%= notes[10] + j%>" data-note="<%= notes[10] + j %>.mp3" title="<%= notas[10] + j %>"><%= notas[10]%></div>
+              <div class='key' id="<%= notes[11] + j%>" data-note="<%= notes[11] + j %>.mp3" title="<%= notas[11] + j %>"><%= notas[11]%></div>
+            <%}%> 
+            
+            
+                   
+
       </div><!-- /span -->    
       </div><!-- /row -->
 
@@ -45,39 +91,51 @@
    <script type="text/javascript">
 
   var server = 'http://<%= server %>:<%= port %>'; 
-  var sound_url =  'http://<%= server %>/soundfont/acoustic_grand_piano-mp3/';
+  var sound_url =  'http://<%= server %>/audio/';
 
         var socket = io && io.connect(server);
         var player = new AudioPlayer(sound_url);
         var canPlay = false;
 
-       $('.btn').hover(function(){
+       $('.key').hover(function(){
 
          	if (!canPlay) return;
-
          	var nota = $(this).attr('data-note');
-      	   $('#played-note').html(nota);
-      	   player.startSound(nota);
+      	   
+           $(this).addClass('active');
+           player.startSound(nota);
 
 
+       }, function(){
+          $(this).removeClass('active');
        });
 
        socket.on('note', function(nota){
-        	$('#played-note').html(nota);
+
+         var res = nota.substring(0,nota.indexOf('.'));
+        	
+          var key = $('#' + res);
+          
+          key.addClass('active');
+
+          setTimeout(function(){key.removeClass('active')}, 10);
         	player.startSound(nota);
       });
 
-      $('.btn').mousedown(function(){
+      $('.key').mousedown(function(){
 
         canPlay = true;
+        $(this).addClass('active');
+
         var nota = $(this).attr('data-note');
-        $('#played-note').html(nota);
+        
         player.startSound(nota);
          socket.emit('note', nota);
       });
 
-      $('.btn').mouseup(function(){
+      $('.key').mouseup(function(){
         canPlay = false;
+        $(this).removeClass('active');
       });
 
 </script>

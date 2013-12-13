@@ -2,7 +2,7 @@ function AudioPlayer(sound_url) {
     var context, 
         soundSource, 
         soundBuffer,
-        url =  sound_url || 'soundfont/acoustic_grand_piano-mp3/';
+        url =  sound_url || 'audio/';
         console.log(url);
 
     // Step 1 - Initialise the Audio Context
@@ -75,7 +75,7 @@ function AudioPlayer(sound_url) {
         volumeNode = context.createGainNode();
 
         //Set the volume
-        volumeNode.gain.value = 5.0;
+        volumeNode.gain.value = 1.0;
 
         // Wiring
         soundSource.connect(volumeNode);

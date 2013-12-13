@@ -18,7 +18,7 @@
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
     app.use(express.favicon());
-    
+
     //app.use(express.logger('dev'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
@@ -41,7 +41,7 @@
 
   //INDEX
   app.get('/', function(req, res){
-    res.render('index',  { server: req.headers.host , port: app.get('port'), ip: req.connection.remoteAddress });
+    res.render('audio',  { server: req.headers.host , port: app.get('port'), ip: req.connection.remoteAddress });
   });
 
    //INDEX
@@ -87,7 +87,7 @@
     socket.on('note', function(data){
         //socket.broadcast()
         socket.broadcast.emit('note', data);
-        console.log(data);
+        
     });
 
   });
