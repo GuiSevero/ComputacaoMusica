@@ -1,8 +1,6 @@
-## RECQUEST
+## INF01062 / CMP581 Computação & Música (2013/2)
 #### UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL
 ---------------
-
-#### Trabalho da cadeira de Computação e Música
 
 #### Frameworks, APIs e Bibliotecas:
 
