@@ -1,0 +1,16 @@
+{
+  "name": "ComputacaoMusicaApp",
+  "version": "0.0.1",
+  "author": "Guilherme Severo",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "3.0.0rc5",
+    "ejs": "*",
+    "stylus": "*",
+    "socket.io": "*",
+    "debug": "*"
+  }
+}

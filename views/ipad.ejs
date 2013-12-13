@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Computacao e Musica</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Le styles -->
+ <link href="css/bootstrap.css" rel="stylesheet">
+ <link href="css/bootstrap-responsive.css" rel="stylesheet">
+ <link href="css/main.less" rel="stylesheet/less">
+
+</head>
+
+
+<body id="main_body" >  
+  <div class="container-fluid default-container">
+    <div class="row-fluid">
+      <div id="played-note"></div>
+      <hr>
+          <div class="span12">
+            <% 
+            var notes = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+            var notekey = 1;
+            for(var j=1; j < 8; j++){
+
+            for(i=0; i<notes.length; i++) { %>
+              
+                <a href="#" class='btn btn-large' data-note="<%= notekey %>"><%= notes[i] + j %></a>
+              
+            <%  notekey++; } %>
+            <hr>
+            <%}%>        
+      </div><!-- /span -->    
+      </div><!-- /row -->
+
+  </div> <!-- /container -->
+
+  
+   
+
+
+  <!-- Scripts -->
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/bootstrap.js"></script>
+  <script type="text/javascript" src="js/socket.io.min.js"></script>
+  <script type="text/javascript">
+
+  var server = 'http://<%= server %>:<%= port %>';         
+        var socket = io && io.connect(server);
+           
+
+      $('.btn').click(function(){
+
+        var n = parseInt($(this).attr('data-note'));
+        var note = 21 + n;
+        $('#played-note').html(note);
+        socket.emit('note', note);
+      });
+
+</script>
+  </body>
+</html>

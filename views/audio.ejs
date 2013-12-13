@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Computacao e Musica</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Le styles -->
+ <link href="css/bootstrap.css" rel="stylesheet">
+ <link href="css/bootstrap-responsive.css" rel="stylesheet">
+ <link href="css/main.less" rel="stylesheet/less">
+
+</head>
+<body>
+  <p class="play">Play</p>
+  <p class="stop">Stop</p>
+
+  <div class="container-fluid default-container">
+    <div class="row-fluid">
+      <div id="played-note"></div>
+      <hr>
+          <div class="span12">
+            <% 
+            var notes = ['Ab','A','Bb','B','C','Db', 'D', 'Eb', 'E','F', 'Gb', 'G'];
+            var notekey = 1;
+            for(var j=1; j < 8; j++){
+
+            for(i=0; i<notes.length; i++) { %>
+              
+                <div class='btn btn-large' data-key="<%= notekey %>" data-note="<%= notes[i] + j %>.mp3"><%= notes[i] + j %></div>
+              
+            <%  notekey++; } %>
+            <hr>
+            <%}%>        
+      </div><!-- /span -->    
+      </div><!-- /row -->
+
+  </div> <!-- /container -->
+
+</body>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/bootstrap.js"></script>
+  <script type="text/javascript" src="js/socket.io.min.js"></script>
+  <script type="text/javascript" src="js/audio.js"></script>
+   <script type="text/javascript">
+
+  var server = 'http://<%= server %>:<%= port %>'; 
+  var sound_url =  'http://<%= server %>/soundfont/acoustic_grand_piano-mp3/';
+
+        var socket = io && io.connect(server);
+        var player = new AudioPlayer(sound_url);
+        var canPlay = false;
+
+       $('.btn').hover(function(){
+
+         	if (!canPlay) return;
+
+         	var nota = $(this).attr('data-note');
+      	   $('#played-note').html(nota);
+      	   player.startSound(nota);
+
+
+       });
+
+       socket.on('note', function(nota){
+        	$('#played-note').html(nota);
+        	player.startSound(nota);
+      });
+
+      $('.btn').mousedown(function(){
+
+        canPlay = true;
+        var nota = $(this).attr('data-note');
+        $('#played-note').html(nota);
+        player.startSound(nota);
+         socket.emit('note', nota);
+      });
+
+      $('.btn').mouseup(function(){
+        canPlay = false;
+      });
+
+</script>
+</html>
+  
